@@ -1,0 +1,132 @@
+#!/bin/env python
+
+from sys import argv
+import re
+
+unicode_dict = {
+    # set theory
+    'subset':' ⊂ ',
+    'supset':' ⊃ ',
+    'union':' ∪ ',
+    'inter':' ∩ ',
+    'nbelongs':' ∉ ',
+    'belongs':' ∈ ',
+    'empty':'∅',
+    'sdiff':' ⊖ ',
+    # logic
+    'not':'¬',
+    'equiv':' ≡ ',
+    'iff':' ↔ ',
+    'imp':' → ',
+    'and':' ∧ ',
+    'xor':' ⊻ ',
+    'or':' ∨ ',
+    'exst':'∃',
+    'all':'∀',
+    'taut':'⊤',
+    'cont':'⊥',
+    'nec':'□',
+    'pos':'◇',
+    # arit
+    'neq':' ≠ ',
+    'eq':' = ',
+    'gteq':' ≥ ',
+    'lteq':' ≤ ',
+    'lt':' < ',
+    'gt':' > ',
+    'crossp':' × ',
+    'dotp':' · ',
+    'infinty':'∞',
+    # misc
+    'darr':' ↔ ',
+    'larr':' ← ',
+    'rarr':' → ',
+    # greek alphabet
+    'alpha':'α',
+    'beta':'β',
+    'gamma':'γ',
+    'delta':'δ',
+    'epsilon':'ε',
+    'zeta':'ζ',
+    'eta':'η',
+    'theta':'θ',
+    'iota':'ι',
+    'kappa':'κ',
+    'lambda':'λ',
+    'mu':'μ',
+    'nu':'ν',
+    'xi':'ξ',
+    'omicron':'ο',
+    'pi':'π',
+    'rho':'ρ',
+    'sigma':'σ',
+    'tau':'τ',
+    'upsilon':'υ',
+    'phi':'φ',
+    'chi':'χ',
+    'psi':'ψ',
+    'omega':'ω',
+    'Alpha':'Α',
+    'Beta':'Β',
+    'Gamma':'Γ',
+    'Delta':'Δ',
+    'Epsilon':'Ε',
+    'Zeta':'Ζ',
+    'Eta':'Η',
+    'Theta':'Θ',
+    'Iota':'Ι',
+    'Kappa':'Κ',
+    'Lambda':'Λ',
+    'Mu':'Μ',
+    'Nu':'Ν',
+    'Xi':'Ξ',
+    'Omicron':'Ο',
+    'Pi':'Π',
+    'Rho':'Ρ',
+    'Sigma':'Σ',
+    'Tau':'Τ',
+    'Upsilon':'Υ',
+    'Phi':'Φ',
+    'Chi':'Χ',
+    'Psi':'Ψ',
+    'Omega':'Ω',
+    # escape chars
+    '_n':'\n'
+}
+
+extra_dict = {
+    # extra
+    '<->':' ↔ ',
+    '<-':' ← ',
+    '->':' → ',
+    '>=':' ≥ ',
+    '<=':' ≤ ',
+    '!=':' ≠ ',
+    '>':' > ',
+    '<':' < ',
+    ':=':' := ',
+}
+
+def main(argc:int, argv:list) -> None:
+    args = re.findall(r"[\w]+|[^\s\w]", ' '.join(argv[1:]))
+    out = ''
+
+    for word in args:
+        if word in unicode_dict:
+            out += unicode_dict[word]
+        else:
+            out += word
+
+    # normalize whitespaces and apply extras
+    re.sub(r'\s+', ' ', out)
+
+    # extra symbol replace
+    for key in extra_dict:
+        out = out.replace(key, extra_dict[key])
+
+    print(out)
+
+
+if __name__ == '__main__':
+    argc = len(argv)
+    main(argc, argv)

@@ -1,0 +1,9 @@
+#!/bin/sh
+
+free | awk \
+	'NR == 2 {
+			printf("Mem: %.1f%%\n", 100*($3/$2));
+	}
+	NR == 3 {
+		printf("Swap: %.1f%%\n", 100*($3/$2));
+	}'

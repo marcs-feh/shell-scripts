@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if [ -z "$WAYLAND_DISPLAY" ]; then
+	brave
+else
+	brave --ozone-platform=wayland
+fi

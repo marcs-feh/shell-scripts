@@ -1,0 +1,3 @@
+#!/bin/sh
+
+doas sh -c 'echo 2700 > /sys/class/backlight/intel_backlight/brightness'

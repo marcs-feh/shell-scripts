@@ -1,0 +1,18 @@
+#!/usr/bin/env python
+
+from sys import argv
+
+def main(argc : int, argv : list):
+    if argc < 2:
+        print('how much bread?')
+        exit(1)
+
+    try:
+        amount = int(argv[1])
+    except ValueError:
+        amount = 1
+    print('🍞'*amount)
+
+if __name__ == '__main__':
+    argc = len(argv)
+    main(argc, argv)

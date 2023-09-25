@@ -1,0 +1,18 @@
+#!/bin/sh
+
+out_name="$(echo $1 | sed -E 's/\.md$/\.tex/')"
+
+[ "$out_name" = "$1" ] \
+	&& out_name="$1.pdf"
+
+pandoc "$1" \
+    -V geometry:a4paper \
+    -V geometry:margin=2cm \
+    -V geometry:twocolumn=true \
+    -V indent:true \
+    -V mainfont:"Source Serif Pro" \
+    -V monofont:"Source Code Pro" \
+    -V fontsize=12pt \
+    -f gfm \
+    -t latex > "$out_name"
+

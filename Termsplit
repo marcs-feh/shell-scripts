@@ -1,0 +1,8 @@
+#!/bin/sh
+
+term=st
+pwd="$(pwd)"
+
+(setsid $term 2> /dev/null) &
+exit
+

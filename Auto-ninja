@@ -1,0 +1,48 @@
+#!/bin/sh
+
+NINJA_BOILERPLATE='cc = clang\nld = clang\ncflags = -O2 -pipe -march=native -std=c17 -Wall -Wextra -Wvla\nldflags = -L./lib\n\nrule cc\n  command = $cc $cflags -c $in -o $out\n\nrule link\n  command = $ld $in -o $out $ldflags\n'
+
+HELP_MSG='auto-ninja [OPTIONS] [ROOT]\n\t-b   Generate ninja boilerplate.\n\r-h,   Display this help message.\n\n\tIf ROOT is not specified, default is "."\n'
+
+[ -z "$out" ] && out="Test"
+
+getDeps(){
+	file=$1
+	echo $(grep -E '^\s*#include\s*".+"' "$file" | sed 's/#include// ; s/"//g')
+}
+
+objBuild(){
+	sources=$(find . -type f | grep -E '\.c$' | sed 's,^\./,,')
+	headers=$(find . -type f | grep -E '\.h$' | sed 's,^\./,,')
+	objects=""
+	commands=""
+
+	for f in $sources; do
+		obj="bin/$(echo $f | sed 's/\.c$/.o/' | tr '/' '.')"
+		objects="$objects $obj"
+		deps="$(getDeps $f)"
+		for d in $deps; do
+			[ -z "$(echo $headers | grep "$d")" ] && \
+				echo "$d not found" > /dev/stderr && \
+				deps="$(echo $deps | sed -E "s/$d\s*//g")"
+		done
+
+		[ -z "$deps" ] && echo "build $obj: cc $f" || echo "build $obj: cc $f | $deps"
+	done
+	echo "build bin/$out: link $objects"
+}
+
+# main
+root=$1
+
+for arg in $@; do
+	case $arg in
+		"-b") echo "$NINJA_BOILERPLATE";;
+		"-h") echo "$HELP_MSG" ; exit;;
+		*) root=$arg ;;
+	esac
+done
+
+[ -z "$root" ] && root="."
+cd "$root" && objBuild
+

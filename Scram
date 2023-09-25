@@ -1,0 +1,5 @@
+#!/bin/sh
+
+read -p 'u sure?(y/N) ' confirm
+
+[ "$confirm" = "y" ] && doas shutdown now

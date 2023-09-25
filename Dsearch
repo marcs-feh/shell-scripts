@@ -1,0 +1,30 @@
+#!/bin/sh
+
+BROWSER="firefox"
+
+SEARCH_TERM="$( printf "" | dmenu -p "Search Term:")"
+if [ "$SEARCH_TERM" = "" ]; then
+    echo "Empty search queary!"
+else
+    SEARCH_ENGINE="$(printf "DuckDuckGo\nOdysee\nGoogle\nYouTube\nWikipedia\nLibrary Genesis\nURL" | dmenu -l 20)"
+
+    if [ "$SEARCH_ENGINE" = "DuckDuckGo" ]; then
+        URL="duckduckgo.com/?q=$(echo $SEARCH_TERM | tr ' ' '+')"
+    elif [ "$SEARCH_ENGINE" = "Odysee" ]; then
+        URL="odysee.com/$/search?q=$(echo $SEARCH_TERM | sed -E 's/\s+/%20/g')"
+    elif [ "$SEARCH_ENGINE" = "Google" ]; then
+        URL="www.google.com/search?q=$(echo $SEARCH_TERM | tr ' ' '+')"
+    elif [ "$SEARCH_ENGINE" = "Wikipedia" ]; then
+        URL="en.wikipedia.org/w/index.php?search=$(echo $SEARCH_TERM | tr ' ' '+')"
+    elif [ "$SEARCH_ENGINE" = "YouTube" ]; then
+        URL="www.youtube.com/results?search_query=$(echo $SEARCH_TERM | tr ' ' '+')"
+    elif [ "$SEARCH_ENGINE" = "Library Genesis" ]; then
+        URL="libgen.is/search.php?req=$(echo $SEARCH_TERM | tr ' ' '+')&open=0&res=25&view=simple&phrase=1&column=def"
+    elif [ "$SEARCH_ENGINE" = "URL" ]; then
+        URL="$SEARCH_TERM"
+    fi
+
+    $BROWSER "https://$URL"
+fi
+
+rm -rf ~/.surf/cookies.txt

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+ cat ~/.local/share/emoji_list \
+	 | fzf --height=75% --info=default --color=16 --layout=reverse --no-bold \
+	 | grep -oE '^.+:' \
+	 | sed -E 's/://'
+

@@ -1,0 +1,19 @@
+#!/bin/sh
+
+cmd=$1
+amount=$2
+
+[ -z "$amount" ] && amount=5
+
+if [ "$cmd" = "up" ]; then
+    amixer set Master ${amount}%+
+elif [ "$cmd" = "dwn" ]; then
+    amixer set Master ${amount}%-
+elif [ "$cmd" = "mute" ]; then
+    amixer set Master 0%
+elif [ "$cmd" = "set" ]; then
+    amixer set Master ${amount}%
+fi
+
+amixer get Master | grep -oE '[0-9]+%' | head -n 1
+

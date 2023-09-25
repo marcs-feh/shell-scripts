@@ -1,0 +1,32 @@
+#!/bin/sh
+
+
+OnX11(){
+	[ -z "$WAYLAND_DISPLAY" ] && [ ! -z "$DISPLAY" ]
+}
+
+OnWayland(){
+	[ ! -z "$WAYLAND_DISPLAY" ]
+}
+
+if OnX11; then
+	if [ -f "$1" ]; then
+		echo 'Copied with xclip' > /dev/stderr
+		xclip -selection clipboard -t $(mimetype -b "$1") < "$1"
+	else
+		echo 'Copied with xsel' > /dev/stderr
+		echo "$1" | xsel -b
+	fi
+elif OnWayland; then
+	# TODO
+	case $XDG_CURRENT_DESKTOP in
+		"sway" | "Hyprland" )
+			echo 'Copied with wl-copy' > /dev/stderr
+			wl-copy < $1
+			;;
+	esac
+else
+	echo "Not on Wayland nor X11"
+	exit 1
+fi
+

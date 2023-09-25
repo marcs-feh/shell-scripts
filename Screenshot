@@ -1,0 +1,13 @@
+#!/bin/sh
+
+DEST=$HOME/.local/share/screenshot.png
+
+if [ -z "$WAYLAND_DISPLAY" ]; then
+	scrot -os $DEST
+	xclip -selection clipboard -t image/png < $DEST
+else
+	grim -g "$(slurp)" -t png "$DEST"
+	wl-copy < "$DEST"
+fi
+
+

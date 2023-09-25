@@ -1,0 +1,27 @@
+#!/usr/bin/env python
+
+from sys import exit, argv
+import subprocess as sb
+
+# WARN: AVOID LEAVING A TRAILING '/' ON PATHS
+
+archive = ['~/music', '~/books', '~/audio', '~/pics', '~/projects', '~/uni',
+           '~/.scripts', '~/.profile', '~/.zshrc', '~/.bashrc', '~/.xinitrc',
+           '~/.pass/passwd.kdbx', '~/.builds', '~/.local/share/applications',
+           '~/.config/nvim', '~/.config/openbox', '~/.config/zathura',
+           '~/.config/lemonbar', '~/.config/sxhkd', '~/.config/mpv']
+
+snapshot = ['~/docs', '~/.scripts']
+
+targets = ['cabin:~/art_backup']
+
+def main(argv:list):
+    for t in targets:
+        for f in archive:
+            archive_cmd = f'rsync -azP -e \'ssh\' {f} {t}'
+            sb.call(['sh','-c', archive_cmd])
+
+    argc = len(argv)
+
+if __name__ == '__main__':
+    main(argv)

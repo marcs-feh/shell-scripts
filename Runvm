@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cd ~/qemu \
+	&& cd "$(ls --color=none -1 | menu -l 16)" \
+	&& ./run.sh

@@ -1,0 +1,11 @@
+#!/bin/sh
+
+interface='wlp0s12f0'
+bridge='br0'
+
+ip link add name $bridge type bridge
+ip link set $bridge up
+ip link set $interface up
+ip link set $interface master $bridge
+#if internet goes down, just run this
+#dhclient -v $bridge

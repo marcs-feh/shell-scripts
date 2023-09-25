@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Choose between doas or sudo
+[ -z $(which doas) ] \
+	&& doer='sudo' \
+	|| doer='doas'
+
+echo 'Disabling zswap...'
+$doer swapoff /dev/zram0
+$doer rmmod zram

@@ -1,0 +1,21 @@
+#!/bin/sh
+
+mem="$(free -m | awk 'NR==2{printf("%dM\n", 0.75 * $2)}')"
+algo="lz4"
+
+# Choose between doas or sudo
+[ -z $(which doas) ] \
+	&& doer='sudo' \
+	|| doer='doas'
+
+if [ -z "$(ls /sys/block | grep -E 'zram')" ]; then
+	echo "Creating zswap of size: $mem"
+	$doer modprobe zram
+	$doer sh -c "echo $algo > /sys/block/zram0/comp_algorithm"
+	$doer sh -c "echo $mem > /sys/block/zram0/disksize"
+	$doer mkswap -L zram0 /dev/zram0
+	$doer swapon -p 100 /dev/zram0
+else
+	echo 'ZRAM active, refuse to run'
+fi
+

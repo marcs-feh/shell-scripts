@@ -1,0 +1,19 @@
+#!/bin/sh
+
+user=$USER
+
+if [ -z "$(ls /sys/block | grep -E 'zram')" ]; then
+    doas modprobe zram
+    test -z "$size" && size="3G"
+    doas sh -c "echo lz4 > /sys/block/zram0/comp_algorithm && echo $size > /sys/block/zram0/disksize"
+    doas mkfs.ext4 /dev/zram0
+    doas mkdir -p /mnt/$user
+    doas mount /dev/zram0 /mnt/$user
+    doas rm -rf /mnt/$user/"lost+found"
+    doas chown -R 644 /mnt
+    doas sh -c "chown -R $user /mnt/$user && chgrp -R $user /mnt/$user"
+
+    chmod -R 755 "/mnt/$user"
+else
+    echo 'ZRAM active, refuse to run'
+fi

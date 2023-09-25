@@ -1,0 +1,7 @@
+#!/bin/sh
+
+doas umount /mnt/ramdisk
+
+[ -z $size ] && size=128m
+
+doas mount -t tmpfs -o $size tmpfs /mnt/ramdisk

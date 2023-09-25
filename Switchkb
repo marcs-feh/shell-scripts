@@ -1,0 +1,12 @@
+#!/bin/sh
+
+OPTIONS="US\nBR-abnt2\nUS-International"
+USER_OPT="$(printf $OPTIONS | dmenu -p 'Keyboard layout: ' -z 800 -l 20)"
+
+if [ "$USER_OPT" = "US" ]; then
+    setxkbmap us -option caps:swapescape
+elif [ "$USER_OPT" = "US-International"  ]; then
+    setxkbmap us -option caps:swapescape -variant intl
+elif [ "$USER_OPT" = "BR-abnt2"  ]; then
+    setxkbmap br -option caps:swapescape
+fi

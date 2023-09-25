@@ -1,0 +1,23 @@
+#!/bin/sh
+
+SimpleSearch(){
+	echo "$1/$(ls -a "$1" | tail -n +3 | fzf)"
+}
+
+RecursiveSearch(){
+	echo "$(find "$1" | fzf)"
+}
+
+funct=SimpleSearch
+
+for arg in $@; do
+	case $arg in
+		"-r") funct=RecursiveSearch ;;
+		*)    target="$arg" ;;
+	esac
+done
+
+[ -z "$target" ] && target="."
+
+$funct "$target"
+

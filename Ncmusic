@@ -1,0 +1,12 @@
+#!/bin/sh
+
+mpdIsRunning(){
+	[ ! -z "$(pgrep mpd)" ]
+}
+
+if mpdIsRunning; then
+    st -e ncmpcpp
+else
+    mpd
+    st -e ncmpcpp
+fi

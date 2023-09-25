@@ -1,0 +1,18 @@
+#!/bin/sh
+
+pdf_name="$(echo $1 | sed -E 's/\.md$/\.pdf/')"
+
+[ "$pdf_name" = "$1" ] \
+	&& pdf_name="$1.pdf"
+
+pandoc "$1" \
+    -V geometry:a4paper \
+    -V geometry:margin=2cm \
+    -V indent:true \
+    -V mainfont:"Source Serif Pro" \
+    -V monofont:"Source Code Pro" \
+    -V fontsize=12pt \
+    -f markdown+tex_math_dollars \
+	-f markdown-implicit_figures \
+    -t pdf -o "$pdf_name"
+

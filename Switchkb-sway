@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# Wayland is notoriously retarded with keyboard layouts, leaving
+# everything for the compositor to handle. This only works for Sway
+input_devs='1:1:AT_Translated_Set_2_keyboard'
+
+Run() { echo "$@"; $@; }
+
+for dev in $input_devs; do
+	echo $dev
+	Run swaymsg input $dev xkb_switch_layout next
+	Run swaymsg input $dev xkb_options caps:swapescape
+done
