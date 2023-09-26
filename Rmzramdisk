@@ -1,6 +1,0 @@
-#!/bin/sh
-
-user=$USER
-doas umount /dev/zram0
-doas rmmod zram
-doas rm -rf /mnt/$user

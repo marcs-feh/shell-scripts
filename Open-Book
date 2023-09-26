@@ -3,7 +3,7 @@
 [ -z "$DOC_VIEWER" ] && \
 	DOC_VIEWER=xdg-open
 
-book="$HOME/books/$(ls ~/books | menu -l 16 -p 'Open')"
+book="$HOME/books/$(ls ~/books | Menu -l 16 -p 'Open')"
 
 test -z "$(echo $book | sed "s:$HOME/books/::g")" \
 	|| $DOC_VIEWER "$book"

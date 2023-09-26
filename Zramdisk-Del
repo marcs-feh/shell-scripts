@@ -1,0 +1,6 @@
+#!/bin/sh
+
+user=$USER
+$(Doer) umount /dev/zram0
+$(Doer) rmmod zram
+$(Doer) rm -rf /mnt/$user

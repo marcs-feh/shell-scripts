@@ -1,0 +1,5 @@
+#!/bin/sh
+
+echo 'Disabling zswap...'
+$(Doer) swapoff /dev/zram0
+$(Doer) rmmod zram
