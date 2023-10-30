@@ -1,7 +1,0 @@
-#!/bin/sh
-
-for f in *.mov; do
-	ffmpeg -i "$f" "$(echo $f | sed 's/\.mov$/.webm/')" \
-		&& rm "$f"
-done
-

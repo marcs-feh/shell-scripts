@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+target="x86_64-linux"
+branch="master"
+
+EnsureDirs(){
+	mkdir -p "$HOME/.local/share"
+	mkdir -p "$HOME/.local/bin"
+	mkdir -p "$HOME/.cache"
+}
+
+GetJSON(){
+	json_file="$HOME/.cache/zig-index-$(date +'%Y-%m-%d-%H-00').json"
+	# Cache it every hour
+	[ -f "$json_file" ] \
+		|| wget 'https://ziglang.org/download/index.json' -O "$json_file"
+
+	cat $json_file
+}
+
+
+InstallZig(){
+
+	EnsureDirs
+
+	rm -f "$HOME/.local/bin/zig"
+
+	tarballURL="$(GetJSON | jq ".[\"$branch\"][\"$target\"][\"tarball\"]" | tr -d '"')"
+	installDir="$(echo $tarballURL | sed 's:.*/::' | sed 's:.tar.xz::')"
+	if [ -d "$HOME/.local/share/$installDir" ]; then
+		ln -s "$HOME/.local/share/$installDir/zig" "$HOME/.local/bin/zig"
+		echo "Version of Zig alrady up to date and installed"
+	else
+		echo 'Extracting zig...'
+		rm -f "$HOME/.local/share/zig-tarball.tar.xz"
+		wget $tarballURL -O "$HOME/.local/share/zig-tarball.tar.xz"
+		echo 'Extracting zig...'
+		tar -C "$HOME/.local/share" -xJf "$HOME/.local/share/zig-tarball.tar.xz"
+		rm "$HOME/.local/share/zig-tarball.tar.xz"
+		ln -s "$HOME/.local/share/$installDir/zig" "$HOME/.local/bin/zig"
+		echo 'Done'
+	fi
+}
+
+# Main
+InstallZig

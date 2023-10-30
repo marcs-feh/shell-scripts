@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+dir="$1"
+
+[ -z "$dir" ] \
+	&& echo 'Zig-Clean DIR [y]' \
+	&& exit 1
+
+cleanup="$(echo "$HOME/.cache/zig" ; find "$dir" -name 'zig-cache')"
+for cache in $cleanup; do
+	size=$(du -m "$cache" | tail -n 1 | awk '{ print $1 }')
+	if [ "$2" = "y" ]; then
+		echo "Deleting: $cache [${size}M]"
+		rm -r "$cache"
+	else
+		echo "Will delete: $cache [${size}M]"
+	fi
+done

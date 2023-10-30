@@ -1,0 +1,23 @@
+#!/bin/sh
+
+user=$USER
+device=$1
+mountName=$2
+superdoer=$(which doas)
+
+[ -z "$device" ] \
+	&& echo "$0 [DEVICE] <NAME>"
+	&& exit
+
+[ -z "$mountName" ] \
+	&& mountName="$(echo $device | tr '/' ':')"
+
+
+mountLoc="/mnt/$user/$mountName"
+Doer mkdir -p "$mountLoc"
+Doer mount "$device" "$mountLoc"
+Doer chown ${user}:${user} -hR "$mountLoc"
+Doer chmod 0700 -R "$mountLoc"
+
+echo "Mounted $device on $mountLoc"
+

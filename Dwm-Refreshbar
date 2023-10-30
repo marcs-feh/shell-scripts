@@ -1,4 +1,0 @@
-#!/bin/sh
-
-# Audio module refresh
-pkill -SIGRTMIN+10 dwmblocks

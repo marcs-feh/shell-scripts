@@ -15,7 +15,7 @@ if OnX11; then
 		xclip -selection clipboard -t $(mimetype -b "$1") < "$1"
 	else
 		echo 'Copied with xsel' > /dev/stderr
-		echo "$1" | xsel -b
+		echo "$@" | xsel -b
 	fi
 elif OnWayland; then
 	# TODO
