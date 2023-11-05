@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# This script deletes all entries from known_hosts which point to a local
+# address, this is particularly useful if you do a lot of VM testing.
+
+KNOWN_HOSTS="$HOME/.ssh/known_hosts"
+
+grep -E '^\[localhost\]' $KNOWN_HOSTS
+grep -E '^\[127.0.0.1\]' $KNOWN_HOSTS
+
+sed -i -E '/^\[localhost\]/d' $KNOWN_HOSTS
+sed -i -E '/^\[127.0.0.1\]/d' $KNOWN_HOSTS
+

@@ -6,7 +6,7 @@ mountName=$2
 superdoer=$(which doas)
 
 [ -z "$device" ] \
-	&& echo "$0 [DEVICE] <NAME>"
+	&& echo "$0 [DEVICE] <NAME>" \
 	&& exit
 
 [ -z "$mountName" ] \
@@ -14,10 +14,15 @@ superdoer=$(which doas)
 
 
 mountLoc="/mnt/$user/$mountName"
-Doer mkdir -p "$mountLoc"
-Doer mount "$device" "$mountLoc"
-Doer chown ${user}:${user} -hR "$mountLoc"
-Doer chmod 0700 -R "$mountLoc"
+uid=$(id -u)
+gid=$(id -u)
+
+set -xe
+$(Doer) mkdir -p "$mountLoc"
+$(Doer) mount -o rw,uid=$uid,gid=$gid "$device" "$mountLoc"
+# $(Doer) chown ${user}:${user} -hR "$mountLoc"
+# $(Doer) chmod 0700 -R "$mountLoc"
+set +e
 
 echo "Mounted $device on $mountLoc"
 

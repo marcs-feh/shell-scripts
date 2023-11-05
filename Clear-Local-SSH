@@ -1,5 +1,0 @@
-#!/bin/sh
-
-sed -i -E '/^\[localhost]/d' ~/.ssh/known_hosts
-sed -i -E '/^\[127.0.0.1]/d' ~/.ssh/known_hosts
-
