@@ -1,4 +1,5 @@
 #!/bin/sh
+PATH="/usr/sbin:$PATH"
 
 echo 'Disabling zswap...'
 $(Doer) swapoff /dev/zram0

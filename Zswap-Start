@@ -1,5 +1,6 @@
 #!/bin/sh
 
+PATH="/usr/sbin:$PATH"
 mem="$(free -m | awk 'NR==2{printf("%dM\n", 0.75 * $2)}')"
 algo="lz4"
 
