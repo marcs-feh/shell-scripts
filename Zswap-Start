@@ -4,13 +4,17 @@ PATH="/usr/sbin:$PATH"
 mem="$(free -m | awk 'NR==2{printf("%dM\n", 0.75 * $2)}')"
 algo="lz4"
 
+[ $(id -u) = "0" ] \
+	|| { echo "This script must be run as root."; exit 1; }
+
 if [ -z "$(ls /sys/block | grep -E 'zram')" ]; then
+	set -xe
 	echo "Creating zswap of size: $mem"
-	$(Doer) modprobe zram
-	$(Doer) sh -c "echo $algo > /sys/block/zram0/comp_algorithm"
-	$(Doer) sh -c "echo $mem > /sys/block/zram0/disksize"
-	$(Doer) mkswap -L zram0 /dev/zram0
-	$(Doer) swapon -p 100 /dev/zram0
+	modprobe zram
+	sh -c "echo $algo > /sys/block/zram0/comp_algorithm"
+	sh -c "echo $mem > /sys/block/zram0/disksize"
+	mkswap -L zram0 /dev/zram0
+	swapon -p 100 /dev/zram0
 else
 	echo 'ZRAM active, refuse to run'
 fi

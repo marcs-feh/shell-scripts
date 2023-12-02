@@ -1,19 +1,38 @@
 #!/bin/sh
 
-user=$USER
+PATH="/usr/sbin:$PATH"
+size="$1"
+user="$2"
+
+{
+	echo "TODO: THIS SCRIPT IS BROKEN"
+	exit 1
+}
+
+[ $(id -u) = "0" ] \
+	|| { echo "This script must be run as root."; exit 1; }
+
+[ -z "$size" ] \
+	&& { echo "$(basename $0) SIZE [USER]"; exit 1; }
+
+[ -z "$user" ] \
+	&& user="root"
 
 if [ -z "$(ls /sys/block | grep -E 'zram')" ]; then
-    $(Doer) modprobe zram
-    test -z "$size" && size="3G"
-    $(Doer) sh -c "echo lz4 > /sys/block/zram0/comp_algorithm && echo $size > /sys/block/zram0/disksize"
-    $(Doer) mkfs.ext4 /dev/zram0
-    $(Doer) mkdir -p /mnt/$user
-    $(Doer) mount /dev/zram0 /mnt/$user
-    $(Doer) rm -rf /mnt/$user/"lost+found"
-    $(Doer) chown -R 644 /mnt
-    $(Doer) sh -c "chown -R $user /mnt/$user && chgrp -R $user /mnt/$user"
+	set -xe
+    modprobe zram
 
-    chmod -R 755 "/mnt/$user"
+    echo lz4 > /sys/block/zram0/comp_algorithm
+	echo $size > /sys/block/zram0/disksize
+	parted -a optimal /dev/zram0 mklabel gpt
+	parted -a optimal /dev/zram0 mkpart primary 0% 100%
+    mkfs.ext4 /dev/zram0
+
+	uid=$(id -u $user)
+	gid=$(id -u $user)
+	mkdir -p /mnt/$user
+	mount -o rw,uid=$uid,gid=$gid /dev/zram0 /mnt/$user
+
 else
     echo 'ZRAM active, refuse to run'
 fi

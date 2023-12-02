@@ -3,7 +3,6 @@
 user=$USER
 device=$1
 mountName=$2
-superdoer=$(which doas)
 
 [ -z "$device" ] \
 	&& echo "$0 [DEVICE] <NAME>" \
@@ -17,11 +16,12 @@ mountLoc="/mnt/$user/$mountName"
 uid=$(id -u)
 gid=$(id -u)
 
+
+doer=$(Doer)
+echo "Using $doer to aquire root privileges"
 set -xe
-$(Doer) mkdir -p "$mountLoc"
-$(Doer) mount -o rw,uid=$uid,gid=$gid "$device" "$mountLoc"
-# $(Doer) chown ${user}:${user} -hR "$mountLoc"
-# $(Doer) chmod 0700 -R "$mountLoc"
+$doer mkdir -p "$mountLoc"
+$doer mount -o rw,uid=$uid,gid=$gid "$device" "$mountLoc"
 set +e
 
 echo "Mounted $device on $mountLoc"

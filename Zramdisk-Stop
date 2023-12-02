@@ -1,6 +1,14 @@
 #!/bin/sh
 
-user=$USER
-$(Doer) umount /dev/zram0
-$(Doer) rmmod zram
-$(Doer) rm -rf /mnt/$user
+PATH="/usr/sbin:$PATH"
+{
+	echo "TODO: THIS SCRIPT IS BROKEN"
+	exit 1
+}
+
+[ $(id -u) = "0" ] \
+	|| { echo "This script must be run as root."; exit 1; }
+
+umount /dev/zram0
+rmmod zram
+# rm -rf /mnt/$user

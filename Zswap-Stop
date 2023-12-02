@@ -1,6 +1,10 @@
 #!/bin/sh
 PATH="/usr/sbin:$PATH"
 
+[ $(id -u) = "0" ] \
+	|| { echo "This script must be run as root."; exit 1; }
+
 echo 'Disabling zswap...'
-$(Doer) swapoff /dev/zram0
-$(Doer) rmmod zram
+set -xe
+swapoff /dev/zram0
+rmmod zram
